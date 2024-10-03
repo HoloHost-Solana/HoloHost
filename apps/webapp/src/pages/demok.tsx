@@ -1,9 +1,11 @@
+import { BrandDashboard } from "@/components/brand-dashboard/BrandLayout";
+
 const DemoK: React.FC = () => {
-    return (
-        <div className="text-red-500" >
-            hello there
-        </div>
-    )
-}
+  return (
+    <div>
+      <BrandDashboard />
+    </div>
+  );
+};
 
 export default DemoK;
