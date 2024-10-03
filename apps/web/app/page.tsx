@@ -1,5 +1,4 @@
 "use client";
-
 import {
   WalletDisconnectButton,
   WalletModalProvider,
@@ -7,14 +6,14 @@ import {
 } from "@solana/wallet-adapter-react-ui";
 import { useState, useEffect } from "react";
 import {
+  createAssociatedTokenAccountInstruction,
   createInitializeMetadataPointerInstruction,
   createInitializeMint2Instruction,
-  createMint,
+  createMintToInstruction,
   ExtensionType,
-  getMinimumBalanceForRentExemptMint,
+  getAssociatedTokenAddressSync,
   getMintLen,
   LENGTH_SIZE,
-  MINT_SIZE,
   TOKEN_2022_PROGRAM_ID,
   TYPE_SIZE,
 } from "@solana/spl-token";
@@ -41,25 +40,32 @@ export default function Home() {
 
     const metadata = {
       mint: keypair.publicKey,
-      name: "Krish",
-      symbol: "Holo    ",
+      name: "Krish2",
+      symbol: "Holo",
       uri: "https://cdn.100xdevs.com/metadata.json",
       additionalMetadata: [],
     };
     const mintLen = getMintLen([ExtensionType.MetadataPointer]);
     const metadataLen = TYPE_SIZE + LENGTH_SIZE + pack(metadata).length;
 
-    const lamports = await connection.getMinimumBalanceForRentExemption(mintLen+metadataLen);
+    const lamports = await connection.getMinimumBalanceForRentExemption(
+      mintLen + metadataLen
+    );
 
     const transaction = new Transaction().add(
       SystemProgram.createAccount({
         fromPubkey: wallet.publicKey,
         newAccountPubkey: keypair.publicKey,
-        space: mintLen  ,
+        space: mintLen,
         lamports,
         programId: TOKEN_2022_PROGRAM_ID,
       }),
-      createInitializeMetadataPointerInstruction(keypair.publicKey, wallet.publicKey, keypair.publicKey, TOKEN_2022_PROGRAM_ID),
+      createInitializeMetadataPointerInstruction(
+        keypair.publicKey,
+        wallet.publicKey,
+        keypair.publicKey,
+        TOKEN_2022_PROGRAM_ID
+      ),
       createInitializeMint2Instruction(
         keypair.publicKey,
         0,
@@ -76,7 +82,7 @@ export default function Home() {
         uri: metadata.uri,
         mintAuthority: wallet.publicKey,
         updateAuthority: wallet.publicKey,
-    }),
+      })
     );
 
     transaction.feePayer = wallet.publicKey;
@@ -86,6 +92,42 @@ export default function Home() {
     transaction.partialSign(keypair);
     let response = await wallet.sendTransaction(transaction, connection);
     console.log(response);
+
+    console.log(`Token mint created at ${keypair.publicKey.toBase58()}`);
+    const associatedToken = getAssociatedTokenAddressSync(
+      keypair.publicKey,
+      wallet.publicKey,
+      false,
+      TOKEN_2022_PROGRAM_ID
+    );
+
+    console.log(associatedToken.toBase58());
+
+    const transaction2 = new Transaction().add(
+      createAssociatedTokenAccountInstruction(
+        wallet.publicKey,
+        associatedToken,
+        wallet.publicKey,
+        keypair.publicKey,
+        TOKEN_2022_PROGRAM_ID
+      )
+    );
+
+    await wallet.sendTransaction(transaction2, connection);
+
+    const transaction3 = new Transaction().add(
+      createMintToInstruction(
+        keypair.publicKey,
+        associatedToken,
+        wallet.publicKey,
+        1,
+        [],
+        TOKEN_2022_PROGRAM_ID
+      )
+    );
+
+    await wallet.sendTransaction(transaction3, connection);
+    console.log('minted');
   };
 
   return (
