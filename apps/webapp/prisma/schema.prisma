@@ -1,0 +1,86 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(cuid()) // Unique identifier
+  name      String?
+  email     String    @unique
+  image     String?
+  userType  UserType // Enum: 'brand' or 'individual'
+  sessions  Session[] // One-to-many relationship with Session
+  accounts  Account[] // One-to-many relationship with Account
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  Campaign Campaign[]
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String // Foreign key to User
+  user         User     @relation(fields: [userId], references: [id])
+  expires      DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Account {
+  id                String   @id @default(cuid())
+  userId            String // Foreign key to User
+  user              User     @relation(fields: [userId], references: [id])
+  provider          String // e.g., 'google', 'github'
+  providerAccountId String // Provider-specific account ID
+  refresh_token     String? // Optional fields for OAuth providers
+  access_token      String? // Optional fields for OAuth providers
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model NFT {
+  id          String   @id @default(cuid()) // Unique identifier
+  mintAddress String // Public key of the NFT
+  metadata    String // Metadata of the NFT (could be JSON or a URL)
+  campaign    Campaign @relation(fields: [campaignId], references: [id])
+  campaignId  String // Foreign key to the Campaign table
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Campaign {
+  id        String   @id @default(cuid()) // Unique identifier
+  name      String // Campaign name
+  totalNFTs Int // Total number of NFTs in the campaign
+  nfts      NFT[] // One-to-many relationship with NFT
+  owner     User     @relation(fields: [ownerId], references: [id])
+  ownerId   String // Foreign key to the User table
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Enum for user type
+enum UserType {
+  BRAND
+  INDIVIDUAL
+}
