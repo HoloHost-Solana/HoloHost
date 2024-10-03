@@ -3,6 +3,7 @@ import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
 import { availableItems } from "./types";
 import { Profile } from "./Profile";
+import { Campaigns } from "./Campaigns";
 
 export const BrandDashboard: React.FC = () => {
   const sidebarNavItems = [
@@ -44,11 +45,14 @@ export const BrandDashboard: React.FC = () => {
             items={sidebarNavItems}
           />
         </div>
-        <div className="ml-8" >
-          {
-            selectedItem === availableItems.Profile ? <Profile />
-            : ''
-          }
+        <div className="ml-8">
+          {selectedItem === availableItems.Profile ? (
+            <Profile />
+          ) : selectedItem === availableItems.Campaigns ? (
+            <Campaigns />
+          ) : (
+            ""
+          )}
         </div>
       </div>
     </div>
