@@ -45,7 +45,10 @@ export const BrandDashboard: React.FC = () => {
           />
         </div>
         <div className="ml-8" >
-          <Profile />
+          {
+            selectedItem === availableItems.Profile ? <Profile />
+            : ''
+          }
         </div>
       </div>
     </div>

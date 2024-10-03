@@ -21,6 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import Link from "next/link";
 import { useFieldArray, useForm } from "react-hook-form";
+import { cn } from "@/lib/utils";
 
 const profileFormSchema = z.object({
   username: z
@@ -135,7 +136,7 @@ export const Profile: React.FC = () => {
           )}
         />
         <div>
-          {/* {fields.map((field, index) => (
+          {fields.map((field, index) => (
             <FormField
             //   control={form.control}
               key={field.id}
@@ -155,7 +156,7 @@ export const Profile: React.FC = () => {
                 </FormItem>
               )}
             />
-          ))} */}
+          ))}
           <Button
             type="button"
             variant="outline"
