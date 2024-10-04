@@ -48,10 +48,7 @@ export default function Signup() {
       </CardHeader>
       <CardContent className="grid gap-4">
         <div className="grid grid-cols-2 gap-6">
-          <Button
-            variant="outline"
-            onClick={() => signIn("github", { callbackUrl: "/" })}
-          >
+          <Button variant="outline" onClick={() => signIn("github")}>
             <Icons.gitHub className="mr-2 h-4 w-4" />
             Github
           </Button>
@@ -105,7 +102,10 @@ export default function Signup() {
               </div>
             )}
           </div>
-          <Button type="submit" className="w-full bg-white text-black hover:bg-slate-50">
+          <Button
+            type="submit"
+            className="w-full bg-white text-black hover:bg-slate-50"
+          >
             Create account
           </Button>
         </form>
