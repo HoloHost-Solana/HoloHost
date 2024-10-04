@@ -89,7 +89,7 @@ export const Profile: React.FC = () => {
           )}
         />
         <FormField
-          //   control={form.control}
+          control={form.control}
           name="email"
           render={({ field }) => (
             <FormItem>
@@ -138,7 +138,7 @@ export const Profile: React.FC = () => {
         <div>
           {fields.map((field, index) => (
             <FormField
-            //   control={form.control}
+              //   control={form.control}
               key={field.id}
               name={`urls.${index}.value`}
               render={({ field }) => (

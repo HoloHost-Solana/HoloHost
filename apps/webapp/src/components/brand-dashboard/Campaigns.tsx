@@ -2,11 +2,24 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import React from "react";
+import { Separator } from "../ui/separator";
+import { Input } from "../ui/input";
+import { Textarea } from "../ui/textarea";
+import { FormItem, FormLabel } from "../ui/form";
+import { DatePickerDemo } from "../ui/DatePicker";
 
 export const Campaigns: React.FC = () => {
   return (
-    <div className="w-[60vw]" >
+    <div className="w-[60vw]">
       <Menu />
     </div>
   );
@@ -14,7 +27,7 @@ export const Campaigns: React.FC = () => {
 
 const Menu: React.FC = () => {
   return (
-    <div className="w-full" >
+    <div className="w-full">
       <Tabs defaultValue="all" className="w-full h-full space-y-6 ">
         <div className="space-between justify-between flex items-center">
           <TabsList>
@@ -22,23 +35,38 @@ const Menu: React.FC = () => {
               All
             </TabsTrigger>
             <TabsTrigger value="ongoing">OnGoing</TabsTrigger>
-            <TabsTrigger value="past">
-              Past
-            </TabsTrigger>
+            <TabsTrigger value="past">Past</TabsTrigger>
           </TabsList>
 
-          <div>
-            <Button variant="outline" className="bg-white text-black" >Launch New Campaign</Button>
-          </div>
+          <Dialog>
+            <DialogTrigger>
+              <Button variant="outline" className="bg-white text-black">
+                Launch New Campaign
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="bg-black">
+              <LaunchCampaignModal />
+            </DialogContent>
+          </Dialog>
         </div>
 
         <TabsContent value="all" className="border-none p-0 outline-none">
-          <div className="flex flex-wrap" >
-            <div className="mx-4 my-2" > <Card /> </div>
-            <div className="mx-4 my-2" > <Card /> </div>
-            <div className="mx-4 my-2" > <Card /> </div>
-            <div className="mx-4 my-2" > <Card /> </div>
-            <div className="mx-4 my-2" > <Card /> </div>
+          <div className="flex flex-wrap">
+            <div className="mx-4 my-2">
+              <Card />
+            </div>
+            <div className="mx-4 my-2">
+              <Card />
+            </div>
+            <div className="mx-4 my-2">
+              <Card />
+            </div>
+            <div className="mx-4 my-2">
+              <Card />
+            </div>
+            <div className="mx-4 my-2">
+              <Card />
+            </div>
           </div>
         </TabsContent>
 
@@ -99,4 +127,44 @@ export function Card() {
   );
 }
 
-
+const LaunchCampaignModal: React.FC = () => {
+  return (
+    <div className="h-[60vh]">
+      <p className="text-3xl mb-2">Launch New Campaign</p>
+      <Separator />
+      <div className="mt-8">
+        <div>
+          <p className="text-xl ml-12">Name</p>
+          <Input
+            className="w-[80%] mx-auto mt-2"
+            placeholder="Enter name for campaign"
+          />
+        </div>
+        <div>
+          <p className="ml-12 text-xl mt-6">Description</p>
+          <Textarea
+            className="mt-2 w-[80%] mx-auto"
+            placeholder="Enter description for campaign"
+          />
+        </div>
+        <div>
+          <p className="ml-12 text-xl mt-6">Start Date</p>
+          <div className="ml-12 mt-1">
+            <DatePickerDemo />
+          </div>
+        </div>
+        <div>
+          <p className="ml-12 text-xl mt-6">End Date</p>
+          <div className="ml-12 mt-1">
+            <DatePickerDemo />
+          </div>
+        </div>
+        <div className="ml-24" >
+          <Button variant="outline" className="bg-white mx-auto mt-4 text-black">
+            Launch New Campaign
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+};
