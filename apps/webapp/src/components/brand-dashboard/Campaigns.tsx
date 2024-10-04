@@ -2,31 +2,39 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import React, { useEffect, useState } from "react";
 import { Separator } from "../ui/separator";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
-import { FormItem, FormLabel } from "../ui/form";
 import { DatePickerDemo } from "../ui/DatePicker";
 
-export const Campaigns: React.FC = () => {
+enum status {
+  ONGOING,
+  PAST,
+}
+
+interface ICard {
+  id: string;
+  name: string;
+  daysLeft: number;
+  desc: string;
+  status: status;
+}
+
+interface I {
+  cards: ICard[];
+}
+
+export const Campaigns: React.FC<I> = ({ cards }) => {
   return (
     <div className="w-[60vw]">
-      <Menu />
+      <Menu cards={cards} />
     </div>
   );
 };
 
-const Menu: React.FC = () => {
-
+const Menu: React.FC<I> = ({ cards }) => {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -63,21 +71,17 @@ const Menu: React.FC = () => {
 
         <TabsContent value="all" className="border-none p-0 outline-none">
           <div className="flex flex-wrap">
-            <div className="mx-4 my-2">
-              <Card />
-            </div>
-            <div className="mx-4 my-2">
-              <Card />
-            </div>
-            <div className="mx-4 my-2">
-              <Card />
-            </div>
-            <div className="mx-4 my-2">
-              <Card />
-            </div>
-            <div className="mx-4 my-2">
-              <Card />
-            </div>
+            {cards.map((c) => (
+              <div key={c.id} className="mx-4 my-2">
+                <Card
+                  id={c.id}
+                  desc={c.desc}
+                  daysLeft={c.daysLeft}
+                  status={c.status}
+                  name={c.name}
+                />
+              </div>
+            ))}
           </div>
         </TabsContent>
 
@@ -99,7 +103,9 @@ const Menu: React.FC = () => {
   );
 };
 
-export function Card() {
+export const Card: React.FC<ICard> = (props) => {
+  const { name, daysLeft, desc } = props;
+
   return (
     <div className="max-w-xs w-full group/card">
       <div
@@ -119,24 +125,23 @@ export function Card() {
           />
           <div className="flex flex-col">
             <p className="font-normal text-base text-gray-50 relative z-10">
-              Manu Arora
+              {name}
             </p>
-            <p className="text-sm text-gray-400">2 min read</p>
+            <p className="text-sm text-gray-400">{daysLeft} days left</p>
           </div>
         </div>
         <div className="text content">
           <h1 className="font-bold text-xl md:text-2xl text-gray-50 relative z-10">
-            Author Card
+            {name}
           </h1>
           <p className="font-normal text-sm text-gray-50 relative z-10 my-4">
-            Card with Author avatar, complete name and time to read - most
-            suitable for blogs.
+            {desc}
           </p>
         </div>
       </div>
     </div>
   );
-}
+};
 
 const LaunchCampaignModal: React.FC = () => {
   const [name, setName] = useState<string>("");
@@ -155,7 +160,7 @@ const LaunchCampaignModal: React.FC = () => {
         name,
         description,
         startDate,
-        endDate
+        endDate,
       }),
     });
     console.log(req);
