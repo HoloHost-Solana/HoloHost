@@ -49,7 +49,7 @@ export const BrandDashboard: React.FC = () => {
           {selectedItem === availableItems.Profile ? (
             <Profile />
           ) : selectedItem === availableItems.Campaigns ? (
-            <Campaigns />
+            <Campaigns /> 
           ) : (
             ""
           )}

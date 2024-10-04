@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Separator } from "../ui/separator";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
@@ -26,6 +26,17 @@ export const Campaigns: React.FC = () => {
 };
 
 const Menu: React.FC = () => {
+
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+    return null; // Do not render on the server
+  }
+
   return (
     <div className="w-full">
       <Tabs defaultValue="all" className="w-full h-full space-y-6 ">
@@ -128,11 +139,27 @@ export function Card() {
 }
 
 const LaunchCampaignModal: React.FC = () => {
-
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [endDate, setEndDate] = useState<Date>(new Date());
+
+  const handleLaunch = async () => {
+    console.log(name, description, startDate, endDate);
+    const req = await fetch("http://localhost:3000/api/createCampaign", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name,
+        description,
+        startDate,
+        endDate
+      }),
+    });
+    console.log(req);
+  };
 
   return (
     <div className="h-[60vh]">
@@ -144,7 +171,7 @@ const LaunchCampaignModal: React.FC = () => {
           <Input
             className="w-[80%] mx-auto mt-2"
             placeholder="Enter name for campaign"
-            onChange={e => setName(e.target.value)}
+            onChange={(e) => setName(e.target.value)}
             value={name}
           />
         </div>
@@ -153,7 +180,7 @@ const LaunchCampaignModal: React.FC = () => {
           <Textarea
             className="mt-2 w-[80%] mx-auto"
             placeholder="Enter description for campaign"
-            onChange={e => setDescription(e.target.value)}
+            onChange={(e) => setDescription(e.target.value)}
             value={description}
           />
         </div>
@@ -169,8 +196,12 @@ const LaunchCampaignModal: React.FC = () => {
             <DatePickerDemo date={endDate} setDate={setEndDate} />
           </div>
         </div>
-        <div className="ml-24" >
-          <Button variant="outline" className="bg-white mx-auto mt-4 text-black">
+        <div className="ml-24">
+          <Button
+            variant="outline"
+            onClick={handleLaunch}
+            className="bg-white mx-auto mt-4 text-black"
+          >
             Launch New Campaign
           </Button>
         </div>
