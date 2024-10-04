@@ -1,8 +1,9 @@
+import { getSession } from "next-auth/react";
 import { useState } from "react";
 
 const Onboarding = () => {
   const [step, setStep] = useState(1);
-  const totalSteps = 2; // Total number of steps
+  const totalSteps = 3; // Total number of steps
 
   const nextStep = () => {
     if (step < totalSteps) {
@@ -21,8 +22,30 @@ const Onboarding = () => {
 
   const [userType, setUserType] = useState("");
   const [name, setName] = useState("");
+  const [desc, setDesc] = useState("");
 
   console.log(name, userType);
+
+  async function handleOnboarding() {
+    try {
+      const session = await getSession();
+
+      const response = await fetch("http://localhost:3000/api/authonboarding", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          userType,
+          desc,
+          userId: session?.user.id,
+        }),
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <div className="w-[50vw] mx-auto mt-10 p-6 bg-[#252424] shadow-md rounded-md">
@@ -91,7 +114,10 @@ const Onboarding = () => {
             </button>
           ) : (
             step != 1 && (
-              <button className=" bg-violet-500 p-2 text-white rounded hover:bg-green-600">
+              <button
+                onClick={handleOnboarding}
+                className=" bg-violet-500 p-2 text-white rounded hover:bg-violet-600"
+              >
                 Finish
               </button>
             )
@@ -104,7 +130,9 @@ const Onboarding = () => {
       {step === 2 && (
         <Step2 nextStep={nextStep} userType={userType} setName={setName} />
       )}
-      {step === 3 && <Step3 nextStep={nextStep} />}
+      {step === 3 && (
+        <Step3 nextStep={nextStep} setDesc={setDesc} userType={userType} />
+      )}
       {step === 4 && <Step4 nextStep={nextStep} />}
 
       {/* Navigation buttons */}
@@ -170,21 +198,23 @@ const Step2 = (props: {
     />
   </div>
 );
-const Step3 = (props: { nextStep: () => void }) => (
-  <div className="h-[30vh] text-white bg-[#252424] flex flex-col gap-16 p-4">
-    <p>What best describes you ?</p>
-
-    <div className="flex gap-4">
-      <button
-        onClick={props.nextStep}
-        className="p-4 border border-purple-500 rounded-lg w-1/2"
-      >
-        Brand
-      </button>
-      <button className="p-4 border border-purple-500 rounded-lg w-1/2">
-        Individual
-      </button>
-    </div>
+const Step3 = (props: {
+  nextStep: () => void;
+  setDesc: (desc: string) => void;
+  userType: string;
+}) => (
+  <div className="h-[50vh]  text-white bg-[#252424] flex flex-col gap-16 p-4">
+    {props.userType === "BRAND" ? (
+      <p className="text-4xl">write some description about the brand :</p>
+    ) : (
+      <p className="text-4xl">Write some description about yourself :</p>
+    )}
+    <textarea
+      onChange={(e: { target: { value: string } }) =>
+        props.setDesc(e?.target.value)
+      }
+      className="border-b-4 p-4  bg-[#252424] focus:bg- border-violet-600"
+    />
   </div>
 );
 const Step4 = (props: { nextStep: () => void }) => (

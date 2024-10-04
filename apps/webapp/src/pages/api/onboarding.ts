@@ -10,14 +10,7 @@ export default async function onboarding(
     return res.status(405).json({ message: "Method Not Allowed" });
   }
 
-  const session = await getSession({ req });
-
-  if (!session) {
-    return res.status(401).json({ message: "Unauthorized" });
-  }
-
-  const userId = session.user.id;
-  const { name, userType } = req.body;
+  const { name, userType, desc, userId } = req.body;
 
   try {
     const updatedUser = await prisma.user.update({
@@ -25,6 +18,7 @@ export default async function onboarding(
       data: {
         name,
         userType,
+        description: desc,
       },
     });
 
