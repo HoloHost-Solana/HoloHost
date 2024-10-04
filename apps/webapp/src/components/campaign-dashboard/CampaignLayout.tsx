@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CampaignSwitcher from "./CampaignSwitcher";
 import { Separator } from "../ui/separator";
 import { CalendarDateRangePicker } from "./DateRangePicker";
@@ -12,8 +12,30 @@ import {
 } from "@/components/ui/card";
 import { Overview } from "./Overview";
 import { RecentSales } from "./RecentSales";
+import { useRouter } from "next/router";
 
 export const CampaignDashboard: React.FC = () => {
+
+  const [loadingCampaign, setLoadingCampaign] = useState<boolean>(true);
+  const router = useRouter();
+
+  useEffect(() => {
+
+    const { id } = router.query;
+
+    if (!id) return;
+
+    const get = async () => {
+      const req = await fetch('http://localhost:3000/api/getCampaign');
+      const res = await req.json();
+      console.log(res.response);
+      if (res.code !== 200) return;
+      setLoadingCampaign(true);
+    }
+    get();
+
+  }, [])
+
   return (
     <div className="w-[80%] mx-auto">
       <Nav />

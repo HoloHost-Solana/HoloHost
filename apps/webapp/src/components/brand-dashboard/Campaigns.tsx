@@ -8,6 +8,7 @@ import { Separator } from "../ui/separator";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { DatePickerDemo } from "../ui/DatePicker";
+import { useRouter } from "next/router";
 
 enum status {
   ONGOING,
@@ -104,10 +105,14 @@ const Menu: React.FC<I> = ({ cards }) => {
 };
 
 export const Card: React.FC<ICard> = (props) => {
-  const { name, daysLeft, desc } = props;
+  const { id, name, daysLeft, desc } = props;
+
+  const router = useRouter();
 
   return (
-    <div className="max-w-xs w-full group/card">
+    <div onClick={() => {
+      router.push(`/campaign?id=${id}`);
+    }} className="max-w-xs w-full group/card">
       <div
         className={cn(
           " cursor-pointer overflow-hidden relative card h-96 rounded-md shadow-xl  max-w-sm mx-auto backgroundImage flex flex-col justify-between p-4",
