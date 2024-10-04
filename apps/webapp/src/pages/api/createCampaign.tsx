@@ -14,7 +14,14 @@ export default async function handler(
 ) {
     try {
 
-        const { name, startDate } = req.body;
+        const { name, description, startDate, endDate } = req.body;
+
+        await prisma.campaign.create({
+            data: {
+                
+            }
+        })
+        
 
     } catch (error) {
         console.error(error);
