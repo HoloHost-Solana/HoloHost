@@ -1,5 +1,6 @@
 import { getSession } from "next-auth/react";
 import { useState } from "react";
+import { useRouter } from "next/router";
 
 const Onboarding = () => {
   const [step, setStep] = useState(1);
@@ -17,8 +18,8 @@ const Onboarding = () => {
     }
   };
 
-  // Calculate progress percentage
   const progress = (step / totalSteps) * 100;
+  const router = useRouter();
 
   const [userType, setUserType] = useState("");
   const [name, setName] = useState("");
@@ -30,7 +31,7 @@ const Onboarding = () => {
     try {
       const session = await getSession();
 
-      const response = await fetch("http://localhost:3000/api/authonboarding", {
+      const response = await fetch("http://localhost:3000/api/onboarding", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -42,6 +43,10 @@ const Onboarding = () => {
           userId: session?.user.id,
         }),
       });
+
+      if (response.status === 200) {
+        router.push("/dashboard");
+      }
     } catch (error) {
       console.log(error);
     }
