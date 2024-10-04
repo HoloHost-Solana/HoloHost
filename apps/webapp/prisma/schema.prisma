@@ -10,15 +10,16 @@ datasource db {
 }
 
 model User {
-  id        String    @id @default(cuid()) // Unique identifier
-  name      String?
-  email     String    @unique
-  image     String?
-  userType  UserType // Enum: 'brand' or 'individual'
-  sessions  Session[] // One-to-many relationship with Session
-  accounts  Account[] // One-to-many relationship with Account
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id          String    @id @default(cuid()) // Unique identifier
+  name        String?
+  email       String    @unique
+  description String
+  image       String?
+  userType    UserType // Enum: 'brand' or 'individual'
+  sessions    Session[] // One-to-many relationship with Session
+  accounts    Account[] // One-to-many relationship with Account
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   Campaign Campaign[]
 }
@@ -69,14 +70,17 @@ model NFT {
 }
 
 model Campaign {
-  id        String   @id @default(cuid()) // Unique identifier
-  name      String // Campaign name
-  totalNFTs Int // Total number of NFTs in the campaign
-  nfts      NFT[] // One-to-many relationship with NFT
-  owner     User     @relation(fields: [ownerId], references: [id])
-  ownerId   String // Foreign key to the User table
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid()) // Unique identifier
+  name        String // Campaign name
+  description String
+  startDate   DateTime
+  EndDate     DateTime
+  totalNFTs   Int // Total number of NFTs in the campaign
+  nfts        NFT[] // One-to-many relationship with NFT
+  owner       User     @relation(fields: [ownerId], references: [id])
+  ownerId     String // Foreign key to the User table
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 // Enum for user type
