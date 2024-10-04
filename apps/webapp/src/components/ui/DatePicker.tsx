@@ -11,8 +11,14 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
-export function DatePickerDemo() {
-  const [date, setDate] = React.useState<Date>()
+interface pr {
+  date: Date,
+  setDate: React.Dispatch<React.SetStateAction<Date>>
+}
+
+export const DatePickerDemo: React.FC<pr> = (props) => {
+
+  const { date, setDate } = props;
 
   return (
     <Popover>
@@ -32,6 +38,7 @@ export function DatePickerDemo() {
         <Calendar
           mode="single"
           selected={date}
+          //@ts-ignore
           onSelect={setDate}
           initialFocus
         />

@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import React from "react";
+import React, { useState } from "react";
 import { Separator } from "../ui/separator";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
@@ -128,6 +128,12 @@ export function Card() {
 }
 
 const LaunchCampaignModal: React.FC = () => {
+
+  const [name, setName] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [startDate, setStartDate] = useState<Date>(new Date());
+  const [endDate, setEndDate] = useState<Date>(new Date());
+
   return (
     <div className="h-[60vh]">
       <p className="text-3xl mb-2">Launch New Campaign</p>
@@ -138,6 +144,8 @@ const LaunchCampaignModal: React.FC = () => {
           <Input
             className="w-[80%] mx-auto mt-2"
             placeholder="Enter name for campaign"
+            onChange={e => setName(e.target.value)}
+            value={name}
           />
         </div>
         <div>
@@ -145,18 +153,20 @@ const LaunchCampaignModal: React.FC = () => {
           <Textarea
             className="mt-2 w-[80%] mx-auto"
             placeholder="Enter description for campaign"
+            onChange={e => setDescription(e.target.value)}
+            value={description}
           />
         </div>
         <div>
           <p className="ml-12 text-xl mt-6">Start Date</p>
           <div className="ml-12 mt-1">
-            <DatePickerDemo />
+            <DatePickerDemo date={startDate} setDate={setStartDate} />
           </div>
         </div>
         <div>
           <p className="ml-12 text-xl mt-6">End Date</p>
           <div className="ml-12 mt-1">
-            <DatePickerDemo />
+            <DatePickerDemo date={endDate} setDate={setEndDate} />
           </div>
         </div>
         <div className="ml-24" >
