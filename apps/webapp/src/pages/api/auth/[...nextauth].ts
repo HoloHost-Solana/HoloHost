@@ -1,30 +1,28 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import GitHubProvider from "next-auth/providers/github";
 // import { getSession } from "next-auth/react";
-// import prisma from "../../../lib/prisma"; // Ensure correct path
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 export const authOptions: NextAuthOptions = {
+  callbacks: {
+    session({ session, user }) {
+      if (session.user) {
+        session.user.id = user.id;
+        // session.user.role = user.role; <-- put other properties on the session here
+      }
+      return session;
+    },
+  },
+  adapter: PrismaAdapter(prisma),
   providers: [
     GitHubProvider({
       clientId: process.env.GITHUB_CLIENT_ID as string,
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
     }),
   ],
-  callbacks: {
-    async jwt({ token, account }) {
-      // Persist the OAuth access_token to the token right after signin
-      if (account) {
-        token.accessToken = account.access_token
-      }
-      return token
-    },
-    async session({ session, token, user }) {
-      // Send properties to the client, like an access_token from a provider.
-      //@ts-ignore
-      session.accessToken = token.accessToken
-      return session
-    }
-  },
 };
 
 export default NextAuth(authOptions);
