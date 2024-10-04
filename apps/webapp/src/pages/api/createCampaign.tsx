@@ -4,9 +4,21 @@ type Data = {
   name: string;
 };
 
-export default function handler(
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
+
+export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-    const { name,  } = req.body;
+    try {
+
+        const { name, startDate } = req.body;
+
+    } catch (error) {
+        console.error(error);
+    } finally {
+        await prisma.$disconnect();
+    }
 }
