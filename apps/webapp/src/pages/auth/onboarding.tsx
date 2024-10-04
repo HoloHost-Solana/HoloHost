@@ -1,5 +1,6 @@
 import { getSession } from "next-auth/react";
 import { useState } from "react";
+import { useRouter } from "next/router";
 
 const Onboarding = () => {
   const [step, setStep] = useState(1);
@@ -17,8 +18,8 @@ const Onboarding = () => {
     }
   };
 
-  // Calculate progress percentage
   const progress = (step / totalSteps) * 100;
+  const router = useRouter();
 
   const [userType, setUserType] = useState("");
   const [name, setName] = useState("");
@@ -42,6 +43,10 @@ const Onboarding = () => {
           userId: session?.user.id,
         }),
       });
+
+      if (response.status === 200) {
+        router.push("/dashboard");
+      }
     } catch (error) {
       console.log(error);
     }
