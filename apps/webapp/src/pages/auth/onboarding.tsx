@@ -30,7 +30,7 @@ const Onboarding = () => {
     try {
       const session = await getSession();
 
-      const response = await fetch("http://localhost:3000/api/authonboarding", {
+      const response = await fetch("http://localhost:3000/api/onboarding", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
