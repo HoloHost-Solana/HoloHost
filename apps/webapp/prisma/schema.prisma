@@ -66,6 +66,10 @@ model NFT {
   id          String   @id @default(cuid()) // Unique identifier
   mintAddress String // Public key of the NFT
   metadata    String // Metadata of the NFT (could be JSON or a URL)
+  description String
+  imageUrl    String
+  name        String
+  symbol      String
   campaign    Campaign @relation(fields: [campaignId], references: [id])
   campaignId  String // Foreign key to the Campaign table
   createdAt   DateTime @default(now())
