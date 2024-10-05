@@ -13,56 +13,66 @@ import {
 import { Overview } from "./Overview";
 import { RecentSales } from "./RecentSales";
 import { useRouter } from "next/router";
+import { LaunchPageForm } from "./LaunchPageForm";
 
 export const CampaignDashboard: React.FC = () => {
-
   const [loadingCampaign, setLoadingCampaign] = useState<boolean>(true);
+  const [selectedOption, setSelectedOption] = useState<string>("Overview");
   const router = useRouter();
 
   useEffect(() => {
-
     const { id } = router.query;
 
     if (!id) return;
 
     const get = async () => {
-      const req = await fetch('http://localhost:3000/api/getCampaign');
+      const req = await fetch("http://localhost:3000/api/getCampaign");
       const res = await req.json();
       console.log(res.response);
       if (res.code !== 200) return;
       setLoadingCampaign(true);
-    }
+    };
     get();
-
-  }, [])
+  }, []);
 
   return (
     <div className="w-[80%] mx-auto">
-      <Nav />
+      <Nav setSelectedOption={setSelectedOption} />
       <Hero />
-      <div className="flex justify-evenly flex-wrap" >
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-      </div>
-      <div className="flex justify-evenly" >
-        <Overview />
-        <RecentSales />
-      </div>
+      {selectedOption === "Overview" ? (
+        <Content />
+      ) : selectedOption === "LaunchPage" ? (
+        <LaunchPageForm />
+      ) : (
+        ""
+      )}
     </div>
   );
 };
 
-const Nav: React.FC = () => {
+interface INav {
+  setSelectedOption: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const Nav: React.FC<INav> = ({ setSelectedOption }) => {
   return (
     <div>
       <div className="flex items-center mt-4">
         <CampaignSwitcher />
-        <div className="mx-3 cursor-pointer ">Overview</div>
+        <div
+          className="mx-3 cursor-pointer"
+          onClick={(_e) => setSelectedOption("Overview")}
+        >
+          Overview
+        </div>
         <div className="mx-3 text-gray-400 cursor-pointer">Nft's Launch</div>
         <div className="mx-3 text-gray-400 cursor-pointer">Social</div>
-        <div className="mx-3 text-gray-400 cursor-pointer">Launch Page</div>
+        <div
+          className="mx-3 text-gray-400 cursor-pointer"
+          onClick={(_e) => setSelectedOption("LaunchPage")}
+        >
+          Launch Page
+        </div>
       </div>
       <Separator className="mt-3" />
     </div>
@@ -98,7 +108,7 @@ const Hero: React.FC = () => {
 
 const Item: React.FC = () => {
   return (
-    <Card className="bg-[#09090B] w-[18vw] h-[16vh] mt-4 text-white border border-[#27272A]" >
+    <Card className="bg-[#09090B] w-[18vw] h-[16vh] mt-4 text-white border border-[#27272A]">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
         <svg
@@ -119,5 +129,22 @@ const Item: React.FC = () => {
         <p className="text-xs text-muted-foreground">+20.1% from last month</p>
       </CardContent>
     </Card>
+  );
+};
+
+const Content: React.FC = () => {
+  return (
+    <div>
+      <div className="flex justify-evenly flex-wrap">
+        <Item />
+        <Item />
+        <Item />
+        <Item />
+      </div>
+      <div className="flex justify-evenly">
+        <Overview />
+        <RecentSales />
+      </div>
+    </div>
   );
 };

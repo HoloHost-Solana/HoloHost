@@ -1,12 +1,10 @@
-import { BrandDashboard } from "@/components/brand-dashboard/BrandLayout";
-import { CampaignDashboard } from "@/components/campaign-dashboard/CampaignLayout";
+import { LaunchPageComponent } from "@/components/campaign-dashboard/LaunchPageComponent";
 
 
 const DemoK: React.FC = () => {
   return (
     <div>
-      <CampaignDashboard />
-      {/* <BrandDashboard /> */}
+      <LaunchPageComponent />
     </div>
   );
 };
