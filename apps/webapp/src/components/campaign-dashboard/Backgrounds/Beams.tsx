@@ -1,10 +1,25 @@
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import {
+  getAssociatedTokenAddressSync,
+  TOKEN_2022_PROGRAM_ID,
+  createAssociatedTokenAccountInstruction,
+  createMintToInstruction,
+} from "@solana/spl-token";
+import { useWallet, useConnection } from "@solana/wallet-adapter-react";
+import { Keypair, Transaction } from "@solana/web3.js";
+import { useRouter } from "next/router";
+
+interface ILaunch {
+  className?: string;
+  title: string;
+  desc: string;
+}
 
 export const BackgroundBeams = React.memo(
-  ({ className }: { className?: string }) => {
+  ({ className, title, desc }: ILaunch) => {
     const paths = [
       "M-380 -189C-380 -189 -312 216 152 343C616 470 684 875 684 875",
       "M-373 -197C-373 -197 -305 208 159 335C623 462 691 867 691 867",
@@ -134,24 +149,24 @@ export const BackgroundBeams = React.memo(
           </defs>
         </svg>
         <div>
-          <Hero />
+          <Hero title={title} desc={desc} />
         </div>
       </div>
     );
   }
 );
 
-const Hero: React.FC = () => {
+interface ILaunch2 {
+  title: string;
+  desc: string;
+}
+
+const Hero: React.FC<ILaunch2> = ({ title, desc }) => {
   return (
-    <div className="flex w-[80vw]" >
+    <div className="flex w-[80vw]">
       <div className="h-[60vh] my-auto">
-        <div className="text-5xl mx-auto">Welcome to Nft Campaign of Nike</div>
-        <div className="text-2xl text-gray-400 mt-4 w-[38vw] ml-4">
-          Lorem ipsum, dolor sit amet Lorem ipsum, dolor sit ametLorem ipsum,
-          dolor sit ametLorem ipsum, dolor sit amet ametLorem ipsum, dolor sit
-          ametLorem ipsum, dolor sit amet ametLorem ipsum, dolor sit ametLorem
-          sit amet
-        </div>
+        <div className="text-5xl mx-auto">{title}</div>
+        <div className="text-2xl text-gray-400 mt-4 w-[38vw]">{desc}</div>
         <div className="ml-8 mt-16">
           <Button />
         </div>
@@ -185,9 +200,78 @@ const Hero: React.FC = () => {
 };
 
 const Button: React.FC = () => {
+  const [isMounted, setIsMounted] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  const wallet = useWallet();
+  const { connection } = useConnection();
+
+  const handleGetNfts = async () => {
+    console.log("clicked");
+
+    if (!wallet.publicKey) return;
+
+    // get minted address id
+    const req = await fetch('http://localhost:3000/api/getNftAdress', {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        id: router.query.cid
+      })
+    })
+    const res = await req.json();
+
+    const mintAdress = res.response.mintAdress;
+
+    const associatedToken = getAssociatedTokenAddressSync(
+      mintAdress,
+      wallet.publicKey,
+      false,
+      TOKEN_2022_PROGRAM_ID
+    );
+
+    console.log(associatedToken.toBase58());
+
+    const transaction2 = new Transaction().add(
+      createAssociatedTokenAccountInstruction(
+        wallet.publicKey,
+        associatedToken,
+        wallet.publicKey,
+        mintAdress,
+        TOKEN_2022_PROGRAM_ID
+      )
+    );
+
+    await wallet.sendTransaction(transaction2, connection);
+
+    const transaction3 = new Transaction().add(
+      createMintToInstruction(
+        mintAdress,
+        associatedToken,
+        wallet.publicKey,
+        1,
+        [],
+        TOKEN_2022_PROGRAM_ID
+      )
+    );
+
+    await wallet.sendTransaction(transaction3, connection);
+  };
+
+  if (!isMounted) return;
+
   return (
     <div>
-      <button className="relative inline-flex h-16 w-[15vw] overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50">
+      <button
+        onClick={handleGetNfts}
+        className="relative inline-flex h-16 w-[15vw] overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
+      >
         <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
         <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-3 py-1 text-2xl font-medium text-white backdrop-blur-3xl">
           Get Nft's

@@ -1,9 +1,14 @@
 import { BackgroundBeams } from "./Backgrounds/Beams";
 
-export const LaunchPageComponent: React.FC = () => {
+interface ILaunch {
+  title: string,
+  desc: string
+}
+
+export const LaunchPageComponent: React.FC<ILaunch> = ({ title, desc }) => {
   return (
     <div>
-        <BackgroundBeams />
+        <BackgroundBeams title={title} desc={desc}  />
     </div>
   );
 };

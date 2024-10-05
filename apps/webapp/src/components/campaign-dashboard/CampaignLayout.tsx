@@ -18,6 +18,8 @@ import { LaunchPageForm } from "./LaunchPageForm";
 export const CampaignDashboard: React.FC = () => {
   const [loadingCampaign, setLoadingCampaign] = useState<boolean>(true);
   const [selectedOption, setSelectedOption] = useState<string>("Overview");
+  const [title, setTitle] = useState<string>('');
+  const [desc, setDesc] = useState<string>('');
   const router = useRouter();
 
   useEffect(() => {
@@ -26,11 +28,14 @@ export const CampaignDashboard: React.FC = () => {
     if (!id) return;
 
     const get = async () => {
+      console.log('here');
       const req = await fetch("http://localhost:3000/api/getCampaign");
       const res = await req.json();
       console.log(res.response);
       if (res.code !== 200) return;
-      setLoadingCampaign(true);
+      setTitle(res.response.title);
+      setDesc(res.response.desc);
+      setLoadingCampaign(false);
     };
     get();
   }, []);
@@ -42,7 +47,7 @@ export const CampaignDashboard: React.FC = () => {
       {selectedOption === "Overview" ? (
         <Content />
       ) : selectedOption === "LaunchPage" ? (
-        <LaunchPageForm />
+        <LaunchPageForm oldTitle={title} oldDesc={desc} />
       ) : (
         ""
       )}

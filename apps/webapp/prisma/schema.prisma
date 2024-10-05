@@ -64,8 +64,8 @@ model VerificationToken {
 
 model NFT {
   id          String   @id @default(cuid()) // Unique identifier
-  mintAddress String // Public key of the NFT
-  metadata    String // Metadata of the NFT (could be JSON or a URL)
+  mintAddress String
+  metadata    String
   description String
   imageUrl    String
   name        String
