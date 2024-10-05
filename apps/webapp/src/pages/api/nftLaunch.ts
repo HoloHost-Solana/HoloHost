@@ -14,7 +14,7 @@ export default async function handler(
     return res.status(405).json({ message: "Method Not Allowed", data: null });
   }
   const { name, description, campaignId, symbol, imageUrl, mintAddress } =
-    req.body;
+    JSON.parse(req.body);
 
   const metadata = JSON.stringify({
     name,

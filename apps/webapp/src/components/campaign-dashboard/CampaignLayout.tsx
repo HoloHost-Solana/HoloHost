@@ -18,8 +18,8 @@ import { LaunchPageForm } from "./LaunchPageForm";
 export const CampaignDashboard: React.FC = () => {
   const [loadingCampaign, setLoadingCampaign] = useState<boolean>(true);
   const [selectedOption, setSelectedOption] = useState<string>("Overview");
-  const [title, setTitle] = useState<string>('');
-  const [desc, setDesc] = useState<string>('');
+  const [title, setTitle] = useState<string>("");
+  const [desc, setDesc] = useState<string>("");
   const router = useRouter();
 
   useEffect(() => {
@@ -28,7 +28,7 @@ export const CampaignDashboard: React.FC = () => {
     if (!id) return;
 
     const get = async () => {
-      console.log('here');
+      console.log("here");
       const req = await fetch("http://localhost:3000/api/getCampaign");
       const res = await req.json();
       console.log(res.response);
@@ -60,6 +60,10 @@ interface INav {
 }
 
 const Nav: React.FC<INav> = ({ setSelectedOption }) => {
+  const router = useRouter();
+
+  const { id } = router.query;
+
   return (
     <div>
       <div className="flex items-center mt-4">
@@ -70,7 +74,12 @@ const Nav: React.FC<INav> = ({ setSelectedOption }) => {
         >
           Overview
         </div>
-        <div className="mx-3 text-gray-400 cursor-pointer">Nft's Launch</div>
+        <div
+          className="mx-3 text-gray-400 cursor-pointer"
+          onClick={() => router.push(`/nftlaunch?id=${id}`)}
+        >
+          Nft's Launch
+        </div>
         <div className="mx-3 text-gray-400 cursor-pointer">Social</div>
         <div
           className="mx-3 text-gray-400 cursor-pointer"

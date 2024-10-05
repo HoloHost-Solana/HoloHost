@@ -26,7 +26,7 @@ import { useRouter } from "next/router";
 export default function Page() {
   const { data: sessionData } = useSession();
   const router = useRouter();
-  const { cId } = router.query;
+  const { id } = router.query;
   const [keypair, setKeypair] = useState<Keypair>();
 
   const [isMounted, setIsMounted] = useState(false);
@@ -192,7 +192,7 @@ export default function Page() {
         symbol,
         imageUrl: `${process.env.CLOUDFRONT_URL}/${fileName}`,
         description,
-        campaignId: cId,
+        campaignId: id,
         mintAddress: keypair.publicKey,
       };
       const res = await fetch(`http://localhost:3000/api/nftLaunch`, {
