@@ -11,6 +11,11 @@ import {
 import { useWallet, useConnection } from "@solana/wallet-adapter-react";
 import { Keypair, Transaction } from "@solana/web3.js";
 import { useRouter } from "next/router";
+import {
+  WalletDisconnectButton,
+  WalletModalProvider,
+  WalletMultiButton,
+} from "@solana/wallet-adapter-react-ui";
 
 interface ILaunch {
   className?: string;
@@ -213,70 +218,84 @@ const Button: React.FC = () => {
   const handleGetNfts = async () => {
     console.log("clicked");
 
-    if (!wallet.publicKey) return;
+    try {
+      if (!wallet.publicKey) return;
 
-    // get minted address id
-    const req = await fetch('http://localhost:3000/api/getNftAdress', {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        id: router.query.cid
-      })
-    })
-    const res = await req.json();
+      // get minted address id
+      const req = await fetch("http://localhost:3000/api/getNftAdress", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: router.query.cid,
+        }),
+      });
+      const res = await req.json();
+      console.log(res);
 
-    const mintAdress = res.response.mintAdress;
+      const mintAdress = res.response.mintAdress;
 
-    const associatedToken = getAssociatedTokenAddressSync(
-      mintAdress,
-      wallet.publicKey,
-      false,
-      TOKEN_2022_PROGRAM_ID
-    );
-
-    console.log(associatedToken.toBase58());
-
-    const transaction2 = new Transaction().add(
-      createAssociatedTokenAccountInstruction(
-        wallet.publicKey,
-        associatedToken,
-        wallet.publicKey,
+      const associatedToken = getAssociatedTokenAddressSync(
         mintAdress,
-        TOKEN_2022_PROGRAM_ID
-      )
-    );
-
-    await wallet.sendTransaction(transaction2, connection);
-
-    const transaction3 = new Transaction().add(
-      createMintToInstruction(
-        mintAdress,
-        associatedToken,
         wallet.publicKey,
-        1,
-        [],
+        false,
         TOKEN_2022_PROGRAM_ID
-      )
-    );
+      );
 
-    await wallet.sendTransaction(transaction3, connection);
+      console.log(associatedToken.toBase58());
+
+      const transaction2 = new Transaction().add(
+        createAssociatedTokenAccountInstruction(
+          wallet.publicKey,
+          associatedToken,
+          wallet.publicKey,
+          mintAdress,
+          TOKEN_2022_PROGRAM_ID
+        )
+      );
+
+      await wallet.sendTransaction(transaction2, connection);
+
+      const transaction3 = new Transaction().add(
+        createMintToInstruction(
+          mintAdress,
+          associatedToken,
+          wallet.publicKey,
+          1,
+          [],
+          TOKEN_2022_PROGRAM_ID
+        )
+      );
+
+      await wallet.sendTransaction(transaction3, connection);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   if (!isMounted) return;
 
   return (
     <div>
-      <button
-        onClick={handleGetNfts}
-        className="relative inline-flex h-16 w-[15vw] overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
-      >
-        <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
-        <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-3 py-1 text-2xl font-medium text-white backdrop-blur-3xl">
-          Get Nft's
-        </span>
-      </button>
+      <WalletModalProvider>
+        <div className="m-4 rounded-md">
+          {wallet.publicKey ? (
+            <WalletDisconnectButton />
+          ) : (
+            <WalletMultiButton />
+          )}
+        </div>
+        <button
+          onClick={handleGetNfts}
+          className="relative inline-flex h-16 w-[15vw] overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
+        >
+          <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
+          <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-3 py-1 text-2xl font-medium text-white backdrop-blur-3xl">
+            Get Nft's
+          </span>
+        </button>
+      </WalletModalProvider>
     </div>
   );
 };
