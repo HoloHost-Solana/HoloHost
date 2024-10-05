@@ -26,11 +26,18 @@ import { useRouter } from "next/router";
 export default function Page() {
   const { data: sessionData } = useSession();
   const router = useRouter();
+  const { cId } = router.query;
+  const [keypair, setKeypair] = useState<Keypair>();
 
   const [isMounted, setIsMounted] = useState(false);
+  const [nftId, setNftId] = useState("");
+  const [infoSaved, setInfoSaved] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
+
+    const keypair = Keypair.generate();
+    setKeypair(keypair);
 
     if (!sessionData?.user) {
       //   router.push("/auth/signup");
@@ -47,13 +54,15 @@ export default function Page() {
 
     if (!wallet.publicKey) return;
 
-    const keypair = Keypair.generate();
+    if (!keypair) {
+      return;
+    }
 
     const metadata = {
       mint: keypair.publicKey,
       name: name,
       symbol: symbol,
-      uri: "https://cdn.100xdevs.com/metadata.json",
+      uri: `http://localhost:3000/api/nftMetadata?nftId=${nftId}`,
       additionalMetadata: [],
     };
     const mintLen = getMintLen([ExtensionType.MetadataPointer]);
@@ -149,7 +158,6 @@ export default function Page() {
         throw new Error("Failed to upload file");
       }
 
-
       console.log("File uploaded successfully");
     } catch (error) {
       console.error("Error during file upload:", error);
@@ -161,11 +169,12 @@ export default function Page() {
     setFileName(e.target.files[0].name);
   };
 
-  const handleSubmit = (e: any) => {
+  const handleImageUpload = (e: any) => {
     e.preventDefault();
-    // Form submission logic
-    // Simulate file upload progress
     let progress = 0;
+
+    uploadFile(file);
+
     const interval = setInterval(() => {
       progress += 10;
       setUploadProgress(progress);
@@ -173,14 +182,38 @@ export default function Page() {
     }, 100);
   };
 
+  async function handleSaveInfo() {
+    try {
+      if (!keypair) {
+        return;
+      }
+      const data = {
+        name,
+        symbol,
+        imageUrl: `${process.env.CLOUDFRONT_URL}/${fileName}`,
+        description,
+        campaignId: cId,
+        mintAddress: keypair.publicKey,
+      };
+      const res = await fetch(`http://localhost:3000/api/nftLaunch`, {
+        method: "GET",
+        body: JSON.stringify(data),
+      });
+
+      const resData = await res.json();
+
+      setNftId(resData.id);
+      setInfoSaved(true);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <div>
       {isMounted && (
         <WalletModalProvider>
-          <form
-            className="flex justify-between px-[7vw] py-[7vh]"
-            onSubmit={handleSubmit}
-          >
+          <form className="flex justify-between px-[7vw] py-[7vh]">
             <div>
               <div className="mb-5">
                 <label
@@ -198,7 +231,6 @@ export default function Page() {
                   className="w-full rounded-md border border-[#e0e0e0] bg-black px-6 py-3 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
                 />
               </div>
-
               <div className="mb-5">
                 <label
                   htmlFor="email"
@@ -235,7 +267,7 @@ export default function Page() {
               </div>
               <button
                 className="p-3 text-sm w-[30vw] rounded-md bg-violet-800 font-semibold"
-                onClick={handleClick}
+                onClick={handleSaveInfo}
               >
                 Save
               </button>
@@ -246,7 +278,7 @@ export default function Page() {
                   <WalletMultiButton />
                 )}
                 <button
-                  className="p-3 text-sm rounded-md bg-violet-800 font-semibold"
+                  className="p-3 text-sm rounded-md bg-violet-800 font-semibold "
                   onClick={handleClick}
                 >
                   Create Token
@@ -375,7 +407,7 @@ export default function Page() {
 
               <div>
                 <button
-                  type="submit"
+                  onClick={handleImageUpload}
                   className="hover:shadow-form w-full rounded-md bg-violet-700 px-8 py-3 text-center text-base font-semibold text-white outline-none"
                 >
                   Upload

@@ -28,7 +28,7 @@ model User {
 model Session {
   id           String   @id @default(cuid())
   sessionToken String   @unique
-  userId       String // Foreign key to User
+  userId       String 
   user         User     @relation(fields: [userId], references: [id])
   expires      DateTime
   createdAt    DateTime @default(now())
@@ -63,29 +63,29 @@ model VerificationToken {
 }
 
 model NFT {
-  id          String   @id @default(cuid()) // Unique identifier
-  mintAddress String // Public key of the NFT
-  metadata    String // Metadata of the NFT (could be JSON or a URL)
+  id          String   @id @default(cuid())
+  mintAddress String
+  metadata    String
   description String
   imageUrl    String
   name        String
   symbol      String
   campaign    Campaign @relation(fields: [campaignId], references: [id])
-  campaignId  String // Foreign key to the Campaign table
+  campaignId  String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
 
 model Campaign {
-  id          String   @id @default(cuid()) // Unique identifier
-  name        String // Campaign name
+  id          String   @id @default(cuid())
+  name        String
   description String
   startDate   DateTime
   EndDate     DateTime
-  totalNFTs   Int // Total number of NFTs in the campaign
-  nfts        NFT[] // One-to-many relationship with NFT
+  totalNFTs   Int
+  nfts        NFT[]
   owner       User     @relation(fields: [ownerId], references: [id])
-  ownerId     String // Foreign key to the User table
+  ownerId     String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
