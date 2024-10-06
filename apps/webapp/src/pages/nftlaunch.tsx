@@ -22,6 +22,7 @@ import { Keypair, SystemProgram, Transaction } from "@solana/web3.js";
 import { createInitializeInstruction, pack } from "@solana/spl-token-metadata";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import { toast } from "react-toastify";
 
 export default function Page() {
   const { data: sessionData } = useSession();
@@ -155,12 +156,12 @@ export default function Page() {
       });
 
       if (!uploadResponse.ok) {
-        throw new Error("Failed to upload file");
+        toast("Failed to upload Image");
       }
 
-      console.log("File uploaded successfully");
+      toast("Image Uploaded Successfully");
     } catch (error) {
-      console.error("Error during file upload:", error);
+      toast("Error during file upload");
     }
   }
 
@@ -195,13 +196,16 @@ export default function Page() {
         campaignId: id,
         mintAddress: keypair.publicKey,
       };
-      const res = await fetch(`http://localhost:3000/api/nftLaunch`, {
-        method: "GET",
-        body: JSON.stringify(data),
-      });
+      const res = await fetch(
+        `http://localhost:3000/api/nftLaunch?data=${JSON.stringify(data)}`,
+        {
+          method: "GET",
+        }
+      );
 
       const resData = await res.json();
 
+      toast(resData.message);
       setNftId(resData.id);
       setInfoSaved(true);
     } catch (error) {

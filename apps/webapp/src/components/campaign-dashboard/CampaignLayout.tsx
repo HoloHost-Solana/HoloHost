@@ -14,6 +14,7 @@ import { Overview } from "./Overview";
 import { RecentSales } from "./RecentSales";
 import { useRouter } from "next/router";
 import { LaunchPageForm } from "./LaunchPageForm";
+import { toast } from "react-toastify";
 
 export const CampaignDashboard: React.FC = () => {
   const [loadingCampaign, setLoadingCampaign] = useState<boolean>(true);
@@ -29,13 +30,22 @@ export const CampaignDashboard: React.FC = () => {
 
     const get = async () => {
       console.log("here");
-      const req = await fetch("http://localhost:3000/api/getCampaign");
-      const res = await req.json();
-      console.log(res.response);
-      if (res.code !== 200) return;
-      setTitle(res.response.title);
-      setDesc(res.response.desc);
-      setLoadingCampaign(false);
+      try {
+        const req = await fetch("http://localhost:3000/api/getCampaign");
+        const res = await req.json();
+        console.log(res.response);
+        if (res.code !== 200) {
+          toast(res.message);
+          return;
+        }
+
+        toast(res.message);
+        setTitle(res.response.title);
+        setDesc(res.response.desc);
+        setLoadingCampaign(false);
+      } catch (error) {
+        toast("An error occured");
+      }
     };
     get();
   }, []);

@@ -13,8 +13,10 @@ export default async function handler(
   if (req.method !== "POST") {
     return res.status(405).json({ message: "Method Not Allowed", data: null });
   }
+
+  const { data } = req.query;
   const { name, description, campaignId, symbol, imageUrl, mintAddress } =
-    JSON.parse(req.body);
+    JSON.parse(data as string);
 
   const metadata = JSON.stringify({
     name,
