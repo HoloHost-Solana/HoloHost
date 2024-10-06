@@ -4,6 +4,7 @@ import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
+import { toast } from "react-toastify";
 
 interface ILaunchPageForm {
   oldTitle: string;
@@ -19,19 +20,27 @@ export const  LaunchPageForm: React.FC<ILaunchPageForm> = (props) => {
   const { data: sessionData } = useSession();
 
   const handleUpdate = async () => {
-    const req = await fetch("http://localhost:3000/api/updateCampaignDetails", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        title,
-        desc,
-        id: router.query.id,
-      }),
-    });
-    const res = await req.json();
-    console.log(res);
+    try {
+      const req = await fetch(
+        "http://localhost:3000/api/updateCampaignDetails",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title,
+            desc,
+            id: router.query.id,
+          }),
+        }
+      );
+      const res = await req.json();
+      toast(res.message);
+      console.log(res);
+    } catch (error) {
+      toast("An Error Occured");
+    }
   };
 
   return (

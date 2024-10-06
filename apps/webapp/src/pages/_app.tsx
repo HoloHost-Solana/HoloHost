@@ -12,6 +12,9 @@ import {
 } from "@solana/wallet-adapter-react-ui";
 import "@solana/wallet-adapter-react-ui/styles.css";
 
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 export default function App({
   Component,
   pageProps: { session, ...pageProps },
@@ -21,6 +24,7 @@ export default function App({
       <WalletProvider wallets={[]}>
         <SessionProvider session={session}>
           <Component {...pageProps} />
+          <ToastContainer />
         </SessionProvider>
       </WalletProvider>
     </ConnectionProvider>

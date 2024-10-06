@@ -10,6 +10,7 @@ import { Textarea } from "../ui/textarea";
 import { DatePickerDemo } from "../ui/DatePicker";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
+import { toast } from "react-toastify";
 
 enum status {
   ONGOING,
@@ -112,9 +113,12 @@ export const Card: React.FC<ICard> = (props) => {
   const { data } = useSession()
 
   return (
-    <div onClick={() => {
-      router.push(`/campaign?id=${id}`);
-    }} className="max-w-xs w-full group/card">
+    <div
+      onClick={() => {
+        router.push(`/campaign?id=${id}`);
+      }}
+      className="max-w-xs w-full group/card"
+    >
       <div
         className={cn(
           " cursor-pointer overflow-hidden relative card h-96 rounded-md shadow-xl  max-w-sm mx-auto backgroundImage flex flex-col justify-between p-4",
@@ -157,20 +161,26 @@ const LaunchCampaignModal: React.FC = () => {
   const [endDate, setEndDate] = useState<Date>(new Date());
 
   const handleLaunch = async () => {
-    console.log(name, description, startDate, endDate);
-    const req = await fetch("http://localhost:3000/api/createCampaign", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name,
-        description,
-        startDate,
-        endDate,
-      }),
-    });
-    console.log(req);
+    try {
+      console.log(name, description, startDate, endDate);
+      const req = await fetch("http://localhost:3000/api/createCampaign", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          description,
+          startDate,
+          endDate,
+        }),
+      });
+      const res = await req.json();
+      toast(res.message);
+      console.log(req);
+    } catch (error) {
+      toast("An Error Occured");
+    }
   };
 
   return (

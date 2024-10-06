@@ -33,6 +33,7 @@
     "@solana/wallet-adapter-react-ui": "^0.9.35",
     "@solana/wallet-adapter-wallets": "^0.19.32",
     "@solana/web3.js": "^1.95.3",
+    "@types/react-toastify": "^4.1.0",
     "next-auth": "^4.24.8",
     "recharts": "^2.12.7",
     "tailwindcss-animate": "^1.0.7"
