@@ -31,7 +31,7 @@ const Onboarding = () => {
     try {
       const session = await getSession();
 
-      const response = await fetch("http://localhost:3000/api/onboarding", {
+      const response = await fetch("https://holohost.xyz/api/onboarding", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

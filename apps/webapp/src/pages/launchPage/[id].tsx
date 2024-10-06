@@ -25,7 +25,7 @@ const LaunchPage: React.FC<MyPageProps> = ({ cid }) => {
 
   useEffect(() => {
     const get = async () => {
-      const req = await fetch(`http://localhost:3000/api/getCampaign`, {
+      const req = await fetch(`https://holohost.xyz/api/getCampaign`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -11,7 +11,7 @@ export default function SignUp() {
       if (!sessionData) return;
 
       const res = await fetch(
-        `http://localhost:3000/api/isNewUser?userId=${sessionData.user.id}`,
+        `https://holohost.xyz/api/isNewUser?userId=${sessionData.user.id}`,
         {
           method: "GET",
         }

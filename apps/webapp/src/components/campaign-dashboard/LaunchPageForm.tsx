@@ -22,7 +22,7 @@ export const  LaunchPageForm: React.FC<ILaunchPageForm> = (props) => {
   const handleUpdate = async () => {
     try {
       const req = await fetch(
-        "http://localhost:3000/api/updateCampaignDetails",
+        "https://holohost.xyz/api/updateCampaignDetails",
         {
           method: "POST",
           headers: {

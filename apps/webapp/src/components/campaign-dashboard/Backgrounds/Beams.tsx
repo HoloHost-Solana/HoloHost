@@ -222,7 +222,7 @@ const Button: React.FC = () => {
       if (!wallet.publicKey) return;
 
       // get minted address id
-      const req = await fetch("http://localhost:3000/api/getNftAdress", {
+      const req = await fetch("https://holohost.xyz/api/getNftAdress", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

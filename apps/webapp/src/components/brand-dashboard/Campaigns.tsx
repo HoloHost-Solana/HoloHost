@@ -164,7 +164,7 @@ const LaunchCampaignModal: React.FC = () => {
   const handleLaunch = async () => {
     try {
       console.log(name, description, startDate, endDate);
-      const req = await fetch("http://localhost:3000/api/createCampaign", {
+      const req = await fetch("https://holohost.xyz/api/createCampaign", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

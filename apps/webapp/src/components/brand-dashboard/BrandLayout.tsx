@@ -39,7 +39,7 @@ export const BrandDashboard: React.FC = () => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const req = await fetch("http://localhost:3000/api/getBrandData");
+        const req = await fetch("https://holohost.xyz/api/getBrandData");
         const res = await req.json();
         if (res.code !== 200) {
           toast(res.message);
@@ -62,7 +62,7 @@ export const BrandDashboard: React.FC = () => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const req = await fetch("http://localhost:3000/api/getBrandCampaigns");
+        const req = await fetch("https://holohost.xyz/api/getBrandCampaigns");
         const res = await req.json();
         console.log(res.response);
         toast(res.message);

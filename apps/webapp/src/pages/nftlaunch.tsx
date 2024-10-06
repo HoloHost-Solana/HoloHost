@@ -64,7 +64,7 @@ export default function Page() {
       mint: keypair.publicKey,
       name: name,
       symbol: symbol,
-      uri: `http://localhost:3000/api/nftMetadata?nftId=${nftId}`,
+      uri: `https://holohost.xyz/api/nftMetadata?nftId=${nftId}`,
       additionalMetadata: [],
     };
 
@@ -136,7 +136,7 @@ export default function Page() {
 
     try {
       const res = await fetch(
-        `http://localhost:3000/api/aws/getSignedUrl?filename=${file.name}&contentType=${file.type}`,
+        `https://holohost.xyz/api/aws/getSignedUrl?filename=${file.name}&contentType=${file.type}`,
         {
           method: "GET",
         }
@@ -203,7 +203,7 @@ export default function Page() {
         mintAddress: keypair.publicKey,
       };
       console.log(data);
-      const res = await fetch(`http://localhost:3000/api/nftLaunch`, {
+      const res = await fetch(`https://holohost.xyz/api/nftLaunch`, {
         method: "POST",
         body: JSON.stringify(data),
       });

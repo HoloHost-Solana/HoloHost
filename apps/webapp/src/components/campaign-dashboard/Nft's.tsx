@@ -22,7 +22,7 @@ export const Nft: React.FC = () => {
 
       if (!id) return;
 
-      const req = await fetch("http://localhost:3000/api/getAllNfts", {
+      const req = await fetch("https://holohost.xyz/api/getAllNfts", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

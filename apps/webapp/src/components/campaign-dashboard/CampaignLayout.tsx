@@ -32,7 +32,7 @@ export const CampaignDashboard: React.FC = () => {
     const get = async () => {
       console.log("here");
       try {
-        const req = await fetch("http://localhost:3000/api/getCampaign");
+        const req = await fetch("https://holohost.xyz/api/getCampaign");
         const res = await req.json();
         console.log(res.response);
         if (res.code !== 200) {
