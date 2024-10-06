@@ -10,11 +10,13 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ message: "Method Not Allowed", data: null });
-  }
+  // if (req.method !== "POST") {
+  //   return res.status(405).json({ message: "Method Not Allowed", data: null });
+  // }
   const { name, description, campaignId, symbol, imageUrl, mintAddress } =
-    JSON.parse(req.body);
+    JSON.parse(req.body as string);
+
+    console.log('first', description, campaignId);
 
   const metadata = JSON.stringify({
     name,
@@ -23,6 +25,8 @@ export default async function handler(
     imageUrl,
     mintAddress,
   });
+
+  console.log(metadata);
 
   try {
     const newNft = await prisma.nFT.create({

@@ -49,7 +49,8 @@ export default function Page() {
   const { connection } = useConnection();
   console.log(wallet.publicKey);
 
-  const handleClick = async () => {
+  const handleClick = async (e: any) => {
+    e.preventDefault();
     console.log("clicked");
 
     if (!wallet.publicKey) return;
@@ -65,6 +66,9 @@ export default function Page() {
       uri: `http://localhost:3000/api/nftMetadata?nftId=${nftId}`,
       additionalMetadata: [],
     };
+
+    console.log(metadata);
+
     const mintLen = getMintLen([ExtensionType.MetadataPointer]);
     const metadataLen = TYPE_SIZE + LENGTH_SIZE + pack(metadata).length;
 
@@ -111,7 +115,7 @@ export default function Page() {
     ).blockhash;
     transaction.partialSign(keypair);
     let response = await wallet.sendTransaction(transaction, connection);
-    console.log(response);
+    console.log(response, transaction);
   };
 
   const [name, setName] = useState("");
@@ -182,27 +186,30 @@ export default function Page() {
     }, 100);
   };
 
-  async function handleSaveInfo() {
+  async function handleSaveInfo(e: any) {
     try {
+      e.preventDefault(); 
       if (!keypair) {
+        console.log('first');
         return;
       }
       const data = {
         name,
         symbol,
-        imageUrl: `${process.env.CLOUDFRONT_URL}/${fileName}`,
+        imageUrl: `https://d1okbxed4nu0ml.cloudfront.net/${fileName}`,
         description,
         campaignId: id,
         mintAddress: keypair.publicKey,
       };
+      console.log(data);
       const res = await fetch(`http://localhost:3000/api/nftLaunch`, {
-        method: "GET",
+        method: "POST",
         body: JSON.stringify(data),
       });
 
       const resData = await res.json();
-
-      setNftId(resData.id);
+      console.log(resData);
+      setNftId(resData.data.id);
       setInfoSaved(true);
     } catch (error) {
       console.log(error);

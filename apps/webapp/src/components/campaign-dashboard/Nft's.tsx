@@ -32,7 +32,8 @@ export const Nft: React.FC = () => {
         }),
       });
       const res = await req.json();
-      console.log(res);
+      console.log(res.response);
+      setNfts(res.response);
     };
     get();
   }, []);
@@ -41,11 +42,13 @@ export const Nft: React.FC = () => {
     <div>
       <div className="text-3xl text-center"> Your Nft's </div>
       <div className="flex flex-wrap">
-        {
-            nfts.map(e => (
-                <LensDemo title={e.title} description={e.description} image={e.image} />
-            ))
-        }
+        {nfts.map((e) => (
+          <LensDemo
+            title={e.title}
+            description={e.description}
+            image={e.image}
+          />
+        ))}
       </div>
     </div>
   );

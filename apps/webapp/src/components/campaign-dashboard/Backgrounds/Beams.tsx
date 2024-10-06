@@ -9,7 +9,7 @@ import {
   createMintToInstruction,
 } from "@solana/spl-token";
 import { useWallet, useConnection } from "@solana/wallet-adapter-react";
-import { Keypair, Transaction } from "@solana/web3.js";
+import { Keypair, PublicKey, Transaction } from "@solana/web3.js";
 import { useRouter } from "next/router";
 import {
   WalletDisconnectButton,
@@ -234,7 +234,10 @@ const Button: React.FC = () => {
       const res = await req.json();
       console.log(res);
 
-      const mintAdress = res.response.mintAdress;
+      const adress = res.response.mintAdress;
+
+      const mintAdress = new PublicKey(adress);
+      console.log(adress, mintAdress);
 
       const associatedToken = getAssociatedTokenAddressSync(
         mintAdress,

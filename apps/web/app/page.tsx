@@ -40,7 +40,7 @@ export default function Home() {
 
     const metadata = {
       mint: keypair.publicKey,
-      name: "Krish2",
+      name: "Krish3",
       symbol: "Holo",
       uri: "https://cdn.100xdevs.com/metadata.json",
       additionalMetadata: [],

@@ -24,18 +24,7 @@ export const BrandDashboard: React.FC = () => {
       title: "Campaigns",
       href: "/dashboard",
     },
-    {
-      title: "Profile",
-      href: "/dashboard/account",
-    },
-    {
-      title: "Appearance",
-      href: "/dashbaord/appearance",
-    },
-    {
-      title: "Notifications",
-      href: "/dashboard/notifications",
-    },
+   
   ];
 
   const [selectedItem, setSelectedItem] = useState<number>(
