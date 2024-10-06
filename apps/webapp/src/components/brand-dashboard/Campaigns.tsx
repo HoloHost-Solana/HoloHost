@@ -39,6 +39,7 @@ export const Campaigns: React.FC<I> = ({ cards }) => {
 
 const Menu: React.FC<I> = ({ cards }) => {
   const [isClient, setIsClient] = useState(false);
+  const [a, setA] = useState<ICard[]>(cards ?? []);
 
   useEffect(() => {
     setIsClient(true);
@@ -74,7 +75,7 @@ const Menu: React.FC<I> = ({ cards }) => {
 
         <TabsContent value="all" className="border-none p-0 outline-none">
           <div className="flex flex-wrap">
-            {cards.map((c) => (
+            {a.map((c) => (
               <div key={c.id} className="mx-4 my-2">
                 <Card
                   id={c.id}

@@ -2,6 +2,7 @@ import { FeaturesSectionDemo } from "@/components/lading-page/features";
 import { Globe, World } from "@/components/lading-page/Globe";
 import { Hero } from "@/components/lading-page/Hero";
 import { InfiniteMovingCards } from "@/components/lading-page/InfiniiteCard";
+import Navbar from "@/components/lading-page/Navbar";
 import { TimelineDemo } from "@/components/lading-page/Timeline";
 import React from "react";
 
@@ -9,24 +10,24 @@ export default function Home() {
 
   const items = [
     {
-      quote: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere, distinctio! Odio impedit consequuntur nihil pariatur provident unde velit consequatur maiores explicabo fuga fugit labore, saepe facere optio, placeat amet temporibus',
-      name: 'Holohost',
-      title: 'kfdgf'
+      quote: "Unlock the power of digital collectibles to elevate your brand's engagement. Our platform connects brands and artists, allowing you to create unique NFT campaigns that your audience will love. Drive loyalty, boost interaction, and create a lasting impression with exclusive, limited-edition NFTs.",
+      name: 'Engage Audiences with Exclusive NFTs',
+      title: 'HoloHost'
     },
     {
-      quote: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere, distinctio! Odio impedit consequuntur nihil pariatur provident unde velit consequatur maiores explicabo fuga fugit labore, saepe facere optio, placeat amet temporibus',
-      name: 'Holohost',
-      title: 'kfdgf'
+      quote: "Say goodbye to complex processes. Our all-in-one platform simplifies the creation and distribution of NFTs, making it easy for brands to collaborate with artists and launch stunning campaigns. Whether you're introducing a new product or rewarding loyal customers, NFTs offer a new way to connect with your audience.",
+      name: 'Seamless NFT Creation for Brands',
+      title: 'HoloHost'
     },
     {
-      quote: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere, distinctio! Odio impedit consequuntur nihil pariatur provident unde velit consequatur maiores explicabo fuga fugit labore, saepe facere optio, placeat amet temporibus',
-      name: 'Holohost',
-      title: 'kfdgf'
+      quote: "Partner with top creators in the NFT space to bring your brand’s vision to life. Our platform provides access to a network of talented artists ready to create unique digital artwork tailored to your campaign. Make your brand stand out with unforgettable visuals and one-of-a-kind NFTs.",
+      name: 'Collaborate with Leading Artists',
+      title: 'HoloHost'
     },
     {
-      quote: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere, distinctio! Odio impedit consequuntur nihil pariatur provident unde velit consequatur maiores explicabo fuga fugit labore, saepe facere optio, placeat amet temporibus',
-      name: 'Holohost',
-      title: 'kfdgf'
+      quote: "Increase your brand’s visibility and engagement by launching campaigns centered around NFTs. These digital assets not only drive interaction but also provide fans with a tangible way to own a piece of your brand. Our tools make it easy to track performance and user engagement in real time.",
+      name: 'Boost Engagement with Digital Collectibles',
+      title: 'HoloHost'
     },
   ]
 
@@ -52,10 +53,3 @@ export default function Home() {
     </div>
   );
 }
-
-const Navbar: React.FC = () => {
-  return (
-    <div className="border border-white h-[7vh]" ></div>
-  )
-}
-
