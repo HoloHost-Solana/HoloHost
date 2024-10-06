@@ -9,6 +9,7 @@ import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { DatePickerDemo } from "../ui/DatePicker";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 
 enum status {
   ONGOING,
@@ -108,6 +109,7 @@ export const Card: React.FC<ICard> = (props) => {
   const { id, name, daysLeft, desc } = props;
 
   const router = useRouter();
+  const { data } = useSession()
 
   return (
     <div onClick={() => {
@@ -124,8 +126,8 @@ export const Card: React.FC<ICard> = (props) => {
           <Image
             height="100"
             width="100"
-            alt="Avatar"
-            src="/manu.png"
+            alt={data?.user.name ?? ""}
+            src={ data?.user.image ?? "" }
             className="h-10 w-10 rounded-full border-2 object-cover"
           />
           <div className="flex flex-col">

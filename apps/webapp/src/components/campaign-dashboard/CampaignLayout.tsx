@@ -14,6 +14,7 @@ import { Overview } from "./Overview";
 import { RecentSales } from "./RecentSales";
 import { useRouter } from "next/router";
 import { LaunchPageForm } from "./LaunchPageForm";
+import { Nft } from "./Nft's";
 
 export const CampaignDashboard: React.FC = () => {
   const [loadingCampaign, setLoadingCampaign] = useState<boolean>(true);
@@ -40,26 +41,36 @@ export const CampaignDashboard: React.FC = () => {
     get();
   }, []);
 
+  if (loadingCampaign) return <div>Loading...</div>;
+
   return (
     <div className="w-[80%] mx-auto">
-      <Nav setSelectedOption={setSelectedOption} />
+      <Nav title={title} setSelectedOption={setSelectedOption} />
       <Hero />
       {selectedOption === "Overview" ? (
         <Content />
       ) : selectedOption === "LaunchPage" ? (
         <LaunchPageForm oldTitle={title} oldDesc={desc} />
+      ): selectedOption === "Nfts" ? <Nft /> : ""}
+      {/* {selectedOption === "Overview" ? (
+        <Content />
+      ) : selectedOption === "LaunchPage" ? (
+        <LaunchPageForm oldTitle={title} oldDesc={desc} />
+      ) : selectedOption === "Nft's" ? (
+        <Nft />
       ) : (
         ""
-      )}
+      )} */}
     </div>
   );
 };
 
 interface INav {
   setSelectedOption: React.Dispatch<React.SetStateAction<string>>;
+  title: string;
 }
 
-const Nav: React.FC<INav> = ({ setSelectedOption }) => {
+const Nav: React.FC<INav> = ({ setSelectedOption, title }) => {
   const router = useRouter();
 
   const { id } = router.query;
@@ -67,7 +78,7 @@ const Nav: React.FC<INav> = ({ setSelectedOption }) => {
   return (
     <div>
       <div className="flex items-center mt-4">
-        <CampaignSwitcher />
+        <CampaignSwitcher title={title} />
         <div
           className="mx-3 cursor-pointer"
           onClick={(_e) => setSelectedOption("Overview")}
@@ -80,7 +91,7 @@ const Nav: React.FC<INav> = ({ setSelectedOption }) => {
         >
           Nft's Launch
         </div>
-        <div className="mx-3 text-gray-400 cursor-pointer">Social</div>
+        <div className="mx-3 text-gray-400 cursor-pointer" onClick={(_e) => setSelectedOption("Nfts")}>NFT's</div>
         <div
           className="mx-3 text-gray-400 cursor-pointer"
           onClick={(_e) => setSelectedOption("LaunchPage")}
@@ -139,8 +150,8 @@ const Item: React.FC = () => {
         </svg>
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold">$45,231.89</div>
-        <p className="text-xs text-muted-foreground">+20.1% from last month</p>
+        <div className="text-2xl font-bold">$0</div>
+        <p className="text-xs text-muted-foreground">+0 from last month</p>
       </CardContent>
     </Card>
   );
@@ -157,7 +168,7 @@ const Content: React.FC = () => {
       </div>
       <div className="flex justify-evenly">
         <Overview />
-        <RecentSales />
+        {/* <RecentSales /> */}
       </div>
     </div>
   );

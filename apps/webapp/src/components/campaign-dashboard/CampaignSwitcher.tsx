@@ -1,16 +1,12 @@
-import * as React from "react"
+import * as React from "react";
 import {
   CaretSortIcon,
   CheckIcon,
   PlusCircledIcon,
-} from "@radix-ui/react-icons"
+} from "@radix-ui/react-icons";
 
-import { cn } from "@/lib/utils"
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar"
+import { cn } from "@/lib/utils";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -30,20 +26,20 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/components/ui/popover";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 
 const groups = [
   {
@@ -68,20 +64,59 @@ const groups = [
       },
     ],
   },
-]
+];
 
-type Team = (typeof groups)[number]["teams"][number]
+type Team = (typeof groups)[number]["teams"][number];
 
-type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>
+type PopoverTriggerProps = React.ComponentPropsWithoutRef<
+  typeof PopoverTrigger
+>;
 
 interface TeamSwitcherProps extends PopoverTriggerProps {}
 
-export default function CampaignSwitcher({ className }: TeamSwitcherProps) {
-  const [open, setOpen] = React.useState(false)
-  const [showNewTeamDialog, setShowNewTeamDialog] = React.useState(false)
+interface I {
+  title: string,
+  className?: string
+}
+
+const CampaignSwitcher: React.FC<I> = (props) => {
+
+  const { title, className } = props;
+
+  const groups = [
+    {
+      label: "Personal Account",
+      teams: [
+        {
+          label: "hello",
+          value: "personal",
+        },
+      ],
+    },
+    {
+      label: "Teams",
+      teams: [
+        {
+          label: "Acme Inc.",
+          value: "acme-inc",
+        },
+        {
+          label: "Monsters Inc.",
+          value: "monsters",
+        },
+      ],
+    },
+  ];  
+
+  const [open, setOpen] = React.useState(false);
+  const [showNewTeamDialog, setShowNewTeamDialog] = React.useState(false);
   const [selectedTeam, setSelectedTeam] = React.useState<Team>(
-    groups[0].teams[0]
-  )
+    // groups[0].teams[0]
+    {
+      label: title,
+      value: title
+    }
+  );
 
   return (
     <Dialog open={showNewTeamDialog} onOpenChange={setShowNewTeamDialog}>
@@ -117,8 +152,8 @@ export default function CampaignSwitcher({ className }: TeamSwitcherProps) {
                     <CommandItem
                       key={team.value}
                       onSelect={() => {
-                        setSelectedTeam(team)
-                        setOpen(false)
+                        setSelectedTeam(team);
+                        setOpen(false);
                       }}
                       className="text-sm"
                     >
@@ -150,8 +185,8 @@ export default function CampaignSwitcher({ className }: TeamSwitcherProps) {
                 <DialogTrigger asChild>
                   <CommandItem
                     onSelect={() => {
-                      setOpen(false)
-                      setShowNewTeamDialog(true)
+                      setOpen(false);
+                      setShowNewTeamDialog(true);
                     }}
                   >
                     <PlusCircledIcon className="mr-2 h-5 w-5" />
@@ -208,5 +243,7 @@ export default function CampaignSwitcher({ className }: TeamSwitcherProps) {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
+
+export default CampaignSwitcher;

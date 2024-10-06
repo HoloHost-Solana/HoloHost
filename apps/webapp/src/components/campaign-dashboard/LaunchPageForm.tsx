@@ -10,7 +10,7 @@ interface ILaunchPageForm {
   oldDesc: string;
 }
 
-export const LaunchPageForm: React.FC<ILaunchPageForm> = (props) => {
+export const  LaunchPageForm: React.FC<ILaunchPageForm> = (props) => {
   const { oldTitle, oldDesc } = props;
 
   const [title, setTitle] = useState<string>(oldTitle);
